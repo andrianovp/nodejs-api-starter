@@ -14,3 +14,6 @@ jobs:
       - run: docker-compose build --build-arg NODE_ENV=test api
       - run: mkdir -m 777 build && docker-compose run api sh -c 'yarn lint && yarn test --forceExit && yarn build'
       - run: docker build --tag api:latest --tag api:$CIRCLE_BUILD_NUM --build-arg NODE_ENV=production .
+      - run: docker login $DOCKER_REGISTRY -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+      - run: docker tag $IMAGE:$TAG $DOCKER_REGISTRY/$IMAGE:$TAG
+      - run: docker push $DOCKER_REGISTRY/$IMAGE:$TAG
